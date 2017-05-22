@@ -29,20 +29,27 @@ class Upload extends CI_Controller {
 	}
 
 	public function add(){
-		$config['upload_path'] = './uploads/';
-		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']	= '100'; //in kb
-		$config['max_width']  = '1024';
-		$config['max_height']  = '768';
+		if(isset($_POST['submit'])){
+			$config['upload_path'] = './uploads/';
+			$config['allowed_types'] = 'gif|jpg|png';
+			$config['max_size']	= '100'; //in kb
+			//$config['max_width']  = '1024';
+			//$config['max_height']  = '768';
+			$config['file_name'] = date('dmYhis');
 
-		$this->upload->initialize($config);
+			$this->upload->initialize($config);
 
-		//if upload failed
-		if ( ! $this->upload->do_upload('file_file')){
-			echo "fail";
+			//if upload failed
+			//$filename = $this->upload->data();
+			if ( ! $this->upload->do_upload('file_file')){
+				echo "fail";
+			}else{
+				$data = array('img' => $this->upload->data('file_name'));
+				$this->Model_Upload->add($data);
+				redirect('upload');
+			}
 		}else{
-			$data = array('img' => $this->upload->data('file_name'));
-			$this->Model_Upload->add($data);
+			$this->load->view('add');
 		}
 	}
 
@@ -58,13 +65,11 @@ class Upload extends CI_Controller {
 	public function update(){
 		if(isset($_POST['submit'])){
 
-			
-
 			$config['upload_path'] = './uploads/';
 			$config['allowed_types'] = 'gif|jpg|png';
-			$config['max_size']	= '100'; //in kb
-			$config['max_width']  = '1024';
-			$config['max_height']  = '768';
+			$config['max_size']	= '10000'; //in kb
+			//$config['max_width']  = '1024';
+			//$config['max_height']  = '768';
 
 			$this->upload->initialize($config);
 
